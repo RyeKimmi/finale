@@ -65,20 +65,16 @@ def second_pass( commands, num_frames ):
 
     for cmd in commands:
         if cmd['op'] == 'vary':
+            knobName = cmd['knob']
             knobArgs = cmd['args']
             start_frame = int(knobArgs[0])
             end_frame = int(knobArgs[1])
             start_val = int(knobArgs[2])
             end_val = int(knobArgs[3])
-            scaling_range = end_val - start_val + 1
-            scaling_factor = float(scaling_range / num_frames)
-            for i in range(start_frame, end_frame):
-                if i == start_frame:
-                    knobVal = start_val
-                if i == end_frame:
-                    knobVal = end_val
-                frames[i][cmd['knob']] = knobVal
-                knobVal += scaling_factor
+            scaling_range = end_val - start_val
+            scaling_factor = float(scaling_range / int(num_frames))
+            for i in range(start_frame, end_frame + 1):
+                frames[i][knobName] = start_val + (i * scaling_factor)
             
     return frames
 
@@ -137,7 +133,11 @@ def run(filename):
         args = command['args']
         knob_value = 1
 
-        if c == 'box':
+        if c == 'vary':
+            knobName = args[0]
+            knob_value = frames[knobName]
+            
+        elif c == 'box':
             if command['constants']:
                 reflect = command['constants']
             add_box(tmp,

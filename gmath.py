@@ -27,6 +27,7 @@ def get_lighting(normal, view, ambient, light, symbols, reflect ):
     normalize(n)
     normalize(light[LOCATION])
     normalize(view)
+    print symbols
     r = symbols[reflect][1]
 
     a = calculate_ambient(ambient, r)

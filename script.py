@@ -68,6 +68,13 @@ def second_pass( commands, num_frames ):
             knobName = cmd['knob']
             #print knobName
             knobArgs = cmd['args']
+
+            vary_factor = knobArgs[4]
+            if vary_factor <= 0:
+                print 'Vary Factor value less than 0, setting to default value: 1'
+                scaling_vary = 1
+            else:
+                scaling_vary = vary_factor
             start_frame = int(knobArgs[0])
             #print start_frame
             end_frame = int(knobArgs[1])
@@ -81,7 +88,7 @@ def second_pass( commands, num_frames ):
             scaling_factor = float(scaling_range) / float(end_frame-start_frame+1)
             #print scaling_factor
             for i in range(start_frame, end_frame + 1):
-                frames[i][knobName] = start_val + (i * scaling_factor)
+                frames[i][knobName] = start_val + ((2**(scaling_vary-1))*(scaling_factor))*((i * scaling_factor)**(scaling_vary))
 
     #print frames
     return frames
@@ -136,7 +143,7 @@ def run(filename):
         coords1 = []
 
         for command in commands:
-            print command
+            #print command
             c = command['op']
             args = command['args']
             knob_value = 1

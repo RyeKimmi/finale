@@ -38,7 +38,7 @@ def first_pass( commands ):
     
     if num_frames > 1 and name == '':
         name = 'default_name'
-        print('default name set to default_name')
+        print ('default name set to default_name')
         
 
     return (name, num_frames)
@@ -68,13 +68,7 @@ def second_pass( commands, num_frames ):
             knobName = cmd['knob']
             #print knobName
             knobArgs = cmd['args']
-
-            vary_factor = knobArgs[4]
-            if vary_factor <= 0:
-                print 'Vary Factor value less than 0, setting to default value: 1'
-                scaling_vary = 1
-            else:
-                scaling_vary = vary_factor
+                
             start_frame = int(knobArgs[0])
             #print start_frame
             end_frame = int(knobArgs[1])
@@ -87,8 +81,23 @@ def second_pass( commands, num_frames ):
             #print scaling_range
             scaling_factor = float(scaling_range) / float(end_frame-start_frame+1)
             #print scaling_factor
+
+            try:
+                scaling_vary = knobArgs[4]
+            except IndexError:
+                knobArgs.append(1)
+                scaling_vary = 1
+                print 'Vary Factor not found, setting to default value: 1'
+                pass
+            if knobArgs[4] <= 0:
+                print 'Vary Factor value less than 0, setting to default value: 1'
+                scaling_vary = 1
+            else:
+                scaling_vary = knobArgs[4]
+            
             for i in range(start_frame, end_frame + 1):
-                frames[i][knobName] = start_val + ((2**(scaling_vary-1))*(scaling_factor))*((i * scaling_factor)**(scaling_vary))
+                frames[i][knobName] = ((1/scaling_range)**(scaling_vary))*(scaling_factor)*(i**(scaling_vary + 1))
+                #Equation created using desmos and can be found at https://www.desmos.com/calculator/wjpvgogb0b
 
     #print frames
     return frames

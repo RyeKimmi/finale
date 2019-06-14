@@ -87,10 +87,10 @@ def second_pass( commands, num_frames ):
             except IndexError:
                 knobArgs.append(1)
                 scaling_vary = 1
-                print 'Vary Factor not found, setting to default value: 1'
+                print ('Vary Factor not found, setting to default value: 1')
                 pass
             if knobArgs[4] <= 0:
-                print 'Vary Factor value less than 0, setting to default value: 1'
+                print ('Vary Factor value less than 0, setting to default value: 1')
                 scaling_vary = 1
             else:
                 scaling_vary = knobArgs[4]
@@ -112,7 +112,7 @@ def run(filename):
     if p:
         (commands, symbols) = p
     else:
-        print "Parsing failed."
+        print ("Parsing failed.")
         return
 
     view = [0,
@@ -225,5 +225,6 @@ def run(filename):
             elif c == 'save':
                 save_extension(screen, args[0])
 
-        save_extension(screen, './anim/' + name + ('0000' + str(i))[-4:])
+        save_extension(screen, './anim/' + name + ('000' + str(i))[-3:])
             # end operation loop
+    make_animation(name)
